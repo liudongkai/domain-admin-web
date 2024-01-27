@@ -43,7 +43,12 @@
         prop="domain_expire_days"
       >
         <template #default="scope">
-          <ExpireDays :value="scope.row.real_domain_expire_days"></ExpireDays>
+          <!-- value的值为scope.row.real_domain_expire_days，若为-9999时显示成已失效，若为Null则显示成- -->
+          <span
+            v-if="scope.row.real_domain_expire_days == -9999"
+            >已失效</span
+          >
+          <span v-else><ExpireDays :value="((scope.row.real_domain_expire_days) ?? '-' )"></ExpireDays></span>
         </template>
       </el-table-column>
 
@@ -193,7 +198,7 @@
         align="center"
       >
         <template #default="scope">
-          
+
         </template>
       </el-table-column> -->
 
@@ -205,7 +210,7 @@
         prop="connect_status"
       >
         <template #default="scope">
-         
+
         </template>
       </el-table-column> -->
 
@@ -327,7 +332,7 @@
         prop="tag"
       >
         <template v-slot="{ row }">
-          
+
         </template>
       </el-table-column> -->
     </el-table>

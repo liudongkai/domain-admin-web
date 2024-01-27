@@ -38,7 +38,7 @@ export default {
           options: [
             {
               label: '已过期',
-              value: [null, 3],
+              value: [-9998, -1],
             },
             {
               label: '3天内过期',
@@ -51,6 +51,14 @@ export default {
             {
               label: '30天内过期',
               value: [0, 30],
+            },
+            {
+              label: '已失效',
+              value: [null, -9999],
+            },
+            {
+              label: '待校验',
+              value: [null, null],
             },
           ],
         },
