@@ -76,7 +76,7 @@
 
       <div class="grid grid-cols-2">
         <!-- 自动更新 -->
-        <el-form-item          
+        <el-form-item
           :label="$t('自动更新')"
           prop="is_auto_update"
         >
@@ -222,6 +222,18 @@
         ></el-input>
       </el-form-item>
 
+      <!-- 注册商whois服务器 -->
+      <el-form-item
+        :label="$t('注册商whois')"
+        prop="domain_whois_server"
+      >
+        <el-input
+          type="text"
+          v-model="form.domain_whois_server"
+          :placeholder="$t('仅在无法检索到期时间时填写域名注册商whois服务器')"
+        ></el-input>
+      </el-form-item>
+
       <!-- 备注 -->
       <el-form-item
         :label="$t('备注')"
@@ -304,6 +316,7 @@ export default {
 
         domain_start_time: '',
         domain_expire_time: '',
+        domain_whois_server: '',
         is_auto_update: true,
 
         icp_company: '',
@@ -357,6 +370,7 @@ export default {
         this.form.group_id = data.group_id
         this.form.domain_start_time = data.domain_start_time
         this.form.domain_expire_time = data.domain_expire_time
+        this.form.domain_whois_server = data.domain_whois_server
         this.form.is_auto_update = data.is_auto_update
         this.form.icp_company = data.icp_company
         this.form.icp_licence = data.icp_licence
@@ -411,6 +425,7 @@ export default {
         is_auto_update: this.form.is_auto_update,
         domain_start_time: this.form.domain_start_time,
         domain_expire_time: this.form.domain_expire_time,
+        domain_whois_server: this.form.domain_whois_server,
         is_auto_subdomain: this.form.is_auto_subdomain,
         tags: this.form.tags,
         icp_company: this.form.icp_company,
