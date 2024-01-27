@@ -68,8 +68,8 @@
           label="剩余天数"
           prop="create_time"
         >
-          <!-- <span>{{ form.real_time_domain_expire_days || '-' }}</span> -->
-          <ExpireDays :value="form.real_domain_expire_days"></ExpireDays>
+          <span>{{ form.real_domain_expire_days || '-' }}</span>
+          <!-- <ExpireDays :value="form.real_domain_expire_days"></ExpireDays> -->
         </el-form-item>
 
         <el-form-item
@@ -119,6 +119,13 @@
             >{{ form.domain_registrar }}</a
           >
           <span v-else>{{ form.domain_registrar || '-' }}</span>
+        </el-form-item>
+
+        <el-form-item
+          label="注册商whois"
+          prop="domain_whois_server"
+        >
+          <span class="truncate">{{ form.domain_whois_server || '--' }}</span>
         </el-form-item>
 
         <el-form-item
@@ -215,6 +222,7 @@ export default {
         comment: '',
         domain_registrar: '',
         domain_registrar_url: '',
+        domain_whois_server: '',
         icp_company: '',
         icp_licence: '',
       },
@@ -276,6 +284,7 @@ export default {
         this.form.domain_url = data.domain_url
         this.form.domain_registrar_url = data.domain_registrar_url
         this.form.domain_registrar = data.domain_registrar
+        this.form.domain_whois_server = data.domain_whois_server
 
         // ip
         this.form.ip = data.ip
