@@ -15,12 +15,26 @@ export const routes = [
   // 首页
   {
     path: '/',
-    redirect: {
-      name: 'cert-list',
-    },
+    name: 'index',
+    component: Layout,
     meta: {
+      title: '首页',
       hidden: true,
     },
+    redirect: {
+      name: 'dashboard',
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('../views/dashboard/dashboard.vue'),
+        meta: {
+          title: '控制台',
+          icon: 'Tickets',
+        },
+      },
+    ],
   },
 
   // 证书
@@ -90,6 +104,44 @@ export const routes = [
         meta: {
           title: '域名列表',
           icon: 'Coin',
+        },
+      },
+    ],
+  },
+
+  // 监控
+  {
+    path: '/monitor',
+    name: 'monitor',
+    component: Layout,
+    meta: {
+      title: '网站监控',
+      icon: 'DataBoard',
+    },
+    redirect: { name: 'monitor-list' },
+    children: [
+      {
+        path: 'list',
+        name: 'monitor-list',
+        component: () => import('../views/monitor-list/index.vue'),
+        meta: {
+          title: '监控列表',
+          icon: 'DataBoard',
+        },
+      },
+      {
+        path: 'log-list',
+        name: 'log-monitor-list',
+        component: () => import('../views/log-monitor-list/index.vue'),
+        meta: {
+          title: '监控日志',
+          icon: 'DataBoard',
+          hidden: true,
+        },
+        props: (route) => {
+          return {
+            monitorId: route.query.monitorId,
+          }
         },
       },
     ],
