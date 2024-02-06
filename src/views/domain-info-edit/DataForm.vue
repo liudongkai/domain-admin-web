@@ -156,14 +156,15 @@
         prop="tags"
       >
         <div>
-          <el-input
-            type="text"
+          <el-autocomplete
             v-model="tag"
+            :fetch-suggestions="querySearchAsync"
             :placeholder="$t('标签，回车确认')"
-            @keypress.native.enter="handleAddTag"
+            @select="handleAddTag"
             style="width: 180px"
             class="mr-sm"
-          ></el-input>
+            @keypress.native.enter="handleAddTag"
+          />
 
           <div>
             <template v-for="(tag, index) in form.tags">
@@ -511,6 +512,16 @@ export default {
     handleRemoveUser() {
       this.form.user_id = ''
       this.form.user_name = ''
+    },
+
+    async querySearchAsync(queryString, cb) {
+      const res = await this.$http.getTagList({ keyword: queryString.trim() })
+      let list = res.data.list.map((item) => {
+        return {
+          value: item.name,
+        }
+      })
+      cb(list)
     },
   },
 
