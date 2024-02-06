@@ -152,7 +152,7 @@ export default {
   // http监控
   addMonitor: '/addMonitor',
   updateMonitorById: '/updateMonitorById',
-  addMonitorActive: '/addMonitorActive',
+  updateMonitorActive: '/updateMonitorActive',
   removeMonitorById: '/removeMonitorById',
   getMonitorById: '/getMonitorById',
   getMonitorList: '/getMonitorList',
@@ -161,4 +161,6 @@ export default {
   getLogMonitorList: '/getLogMonitorList',
   clearLogMonitor: '/clearLogMonitor',
   clearAllLogMonitor: '/clearAllLogMonitor',
+  
+  getTagList: '/getTagList',
 }
