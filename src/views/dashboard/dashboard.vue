@@ -1,6 +1,6 @@
 <template>
   <div class="app-container dashboard">
-    <HomeDataInfo :list="list" />
+    <HomeDataInfo :list="systemData" />
 
     <div class="grid mt-md gap-[20px] grid-cols-3">
       <HomeCard
@@ -67,6 +67,53 @@ export default {
       adModal: true,
       list: [],
       certValue: [],
+
+      timer: null,
+      systemData: [
+        {
+          title: '证书数量',
+          key: 'ssl_cert_count',
+          count: 0,
+          color: COLORS.PRIMARY,
+          path: '/cert/list',
+        },
+        {
+          title: '域名数量',
+          key: 'domain_count',
+          count: 0,
+          path: '/domain/list',
+          color: COLORS.PRIMARY,
+        },
+        {
+          title: '监控数量',
+          key: 'monitor_count',
+          path: '/monitor/list',
+          count: 0,
+          color: COLORS.PRIMARY,
+        },
+        {
+          title: '过期证书',
+          key: 'ssl_cert_expire_count',
+          count: 0,
+          path: '/cert/list',
+          color: COLORS.SUCCESS,
+        },
+        {
+          title: '过期域名',
+          key: 'domain_expire_count',
+          count: 0,
+          path: '/domain/list',
+          color: COLORS.SUCCESS,
+        },
+
+        {
+          title: '监控异常',
+          key: 'monitor_error_count',
+          count: 0,
+          path: '/monitor/list',
+          color: COLORS.SUCCESS,
+        },
+      ],
     }
   },
   computed: {},
@@ -76,106 +123,157 @@ export default {
   methods: {
     async getData() {
       const res = await this.$http.getSystemData()
-      this.list = res.data.map((item, index) => {
-        item.key = getUUID()
+      // this.list = res.data.map((item, index) => {
+      //   // item.key = getUUID()
 
-        if (index < 3) {
-          item.color = COLORS.PRIMARY
-        } else {
+      //   if (index < 3) {
+      //     item.color = COLORS.PRIMARY
+      //   } else {
+      //     if (item.count > 0) {
+      //       item.color = COLORS.DANGER
+      //     } else {
+      //       item.color = COLORS.SUCCESS
+      //     }
+      //   }
+
+      //   return item
+      // })
+
+      let data = {}
+
+      res.data.forEach((item) => {
+        data[item.key] = item
+      })
+
+      console.log(data)
+
+      this.systemData.forEach((item) => {
+        item.count = data[item.key].count
+
+        if (item.color != COLORS.PRIMARY) {
           if (item.count > 0) {
             item.color = COLORS.DANGER
           } else {
             item.color = COLORS.SUCCESS
           }
         }
-
-        return item
       })
 
-      this.handleInit(this.list)
+      this.handleInit(data)
 
       //   this.$emit('on-init', { list: this.list })
     },
 
-    handleInit(list) {
-      console.log(list)
-
+    handleCertData(systemData) {
       // 证书
-      let cert_count = list.find((item) => item.title === '证书数量').count
-      let cert_expire_count = list.find(
-        (item) => item.title === '过期证书'
-      ).count
-
-      let cert_ok_count = cert_count - cert_expire_count
+      let ssl_cert_ok_count =
+        systemData.ssl_cert_count.count -
+        systemData.ssl_cert_expire_count.count -
+        systemData.ssl_cert_will_expire_count.count
 
       let certValue = [
         {
-          value: cert_ok_count,
+          value: ssl_cert_ok_count,
           name: '未过期',
           color: COLORS.SUCCESS,
-          selected: cert_count > 0,
+          selected: systemData.ssl_cert_count.count > 0,
         },
         {
-          value: cert_expire_count,
+          value: systemData.ssl_cert_will_expire_count.count,
+          name: '即将过期',
+          color: COLORS.WARNING,
+          selected: systemData.ssl_cert_count.count > 0,
+        },
+        {
+          value: systemData.ssl_cert_expire_count.count,
           name: '已过期',
           color: COLORS.DANGER,
-          selected: cert_expire_count != 0,
+          selected: systemData.ssl_cert_count.count > 0,
         },
       ]
 
       this.$refs.HomeChartCertPie.initChart(certValue)
+    },
 
+    handleDomainData(systemData) {
       //   域名
-      let domain_count = list.find((item) => item.title === '域名数量').count
-      let domain_expire_count = list.find(
-        (item) => item.title === '过期域名'
-      ).count
-      let domain_ok_count = domain_count - domain_expire_count
+
+      let domain_ok_count =
+        systemData.domain_count.count -
+        systemData.domain_will_expire_count.count -
+        systemData.domain_expire_count.count
+
       let domainValue = [
         {
           value: domain_ok_count,
           name: '未过期',
           color: COLORS.SUCCESS,
-          selected: domain_count > 0,
+          selected: systemData.domain_count.count > 0,
         },
         {
-          value: domain_expire_count,
+          value: systemData.domain_will_expire_count.count,
+          name: '即将过期',
+          color: COLORS.WARNING,
+          selected: systemData.domain_count.count > 0,
+        },
+        {
+          value: systemData.domain_expire_count.count,
           name: '已过期',
           color: COLORS.DANGER,
-          selected: domain_expire_count > 0,
+          selected: systemData.domain_count.count > 0,
         },
       ]
 
       this.$refs.HomeChartDomainPie.initChart(domainValue)
+    },
 
+    handleMonitorData(systemData) {
       // 监控
-      let monitor_count = list.find((item) => item.title === '监控数量').count
-      let monitor_expire_count = list.find(
-        (item) => item.title === '监控异常'
-      ).count
 
-      let monitor_ok_count = monitor_count - monitor_expire_count
+      let monitor_ok_count =
+        systemData.monitor_count.count - systemData.monitor_error_count.count
 
       let monitorValue = [
         {
           value: monitor_ok_count,
           name: '正常',
           color: COLORS.SUCCESS,
-          selected: monitor_count > 0,
+          selected: systemData.monitor_count.count > 0,
         },
         {
-          value: monitor_expire_count,
+          value: systemData.monitor_error_count.count,
           name: '异常',
           color: COLORS.DANGER,
-          selected: monitor_expire_count > 0,
+          selected: systemData.monitor_count.count > 0,
         },
       ]
 
       this.$refs.HomeChartMonitorPie.initChart(monitorValue)
     },
+
+    handleInit(systemData) {
+      console.log(systemData)
+
+      this.handleCertData(systemData)
+      this.handleDomainData(systemData)
+      this.handleMonitorData(systemData)
+    },
+  },
+
+  beforeUnmount() {
+    console.log('beforeUnmount')
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
   },
 
   mounted() {
+    console.log('mounted')
+    this.timer = setInterval(() => {
+      this.getData()
+    }, 1000 * 60 * 1)
+
     this.getData()
   },
 }
