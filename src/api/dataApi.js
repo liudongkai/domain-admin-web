@@ -11,6 +11,7 @@ export default {
   deleteDomainByIds: '/deleteDomainByIds',
   updateDomainById: '/updateDomainById',
   updateDomainFieldById: '/updateDomainFieldById',
+  updateDomainFieldByIds: '/updateDomainFieldByIds',
   updateDomainExpireMonitorById: '/updateDomainExpireMonitorById',
   updateDomainCertInfoById: '/updateDomainCertInfoById',
   updateDomainRowInfoById: '/updateDomainRowInfoById',
@@ -32,6 +33,7 @@ export default {
   getCronConfig: '/getCronConfig',
   updateCronConfig: '/updateCronConfig',
   getSystemData: '/getSystemData',
+  getMonitorTaskNextRunTime: '/getMonitorTaskNextRunTime',
 
   getUserInfo: '/getUserInfo',
   updateUserInfo: '/updateUserInfo',
@@ -127,7 +129,7 @@ export default {
   clearAsyncTaskLogList: '/clearAsyncTaskLogList',
 
   // SSL证书
-  getCertificateList: '/getCertificateList',
+  getIssueCertificateList: '/getIssueCertificateList',
   issueCertificate: '/issueCertificate',
   renewCertificate: '/renewCertificate',
   getIssueCertificateById: '/getIssueCertificateById',
@@ -138,9 +140,10 @@ export default {
   deployVerifyFile: '/deployVerifyFile',
   deployCertificateFile: '/deployCertificateFile',
   getCertificateChallenges: '/getCertificateChallenges',
-  deleteCertificateById: '/deleteCertificateById',
+  deleteIssueCertificateById: '/deleteIssueCertificateById',
   deleteCertificateByBatch: '/deleteCertificateByBatch',
   getAllowCommands: '/getAllowCommands',
+  notifyWebHook: '/notifyWebHook',
 
   // 主机管理
   getHostList: '/getHostList',
@@ -154,13 +157,36 @@ export default {
   updateMonitorById: '/updateMonitorById',
   updateMonitorActive: '/updateMonitorActive',
   removeMonitorById: '/removeMonitorById',
+  deleteMonitorByIds: '/deleteMonitorByIds',
   getMonitorById: '/getMonitorById',
   getMonitorList: '/getMonitorList',
+  exportMonitorFile: '/exportMonitorFile',
+  importMonitorFromFile: '/importMonitorFromFile',
 
   // http监控日志
   getLogMonitorList: '/getLogMonitorList',
   clearLogMonitor: '/clearLogMonitor',
   clearAllLogMonitor: '/clearAllLogMonitor',
-  
+
   getTagList: '/getTagList',
+
+  // 证书托管
+  getCertificateList: '/getCertificateList',
+  addCertificate: '/addCertificate',
+  updateCertificateById: '/updateCertificateById',
+  deleteCertificateById: '/deleteCertificateById',
+  deleteCertificateByIds: '/deleteCertificateByIds',
+  getCertificateById: '/getCertificateById',
+
+  parsePublicCert: '/parsePublicCert',
+  sendTestEmail: '/sendTestEmail',
+
+  // 证书部署
+  getDeployListByCertId: '/getDeployListByCertId',
+  addDeployCert: '/addDeployCert',
+  updateDeployCertById: '/updateDeployCertById',
+  deleteByDeployCertId: '/deleteByDeployCertId',
+  deleteByDeployCertIds: '/deleteByDeployCertIds',
+  getDeployCertById: '/getDeployCertById',
+  handleDeployCert: '/handleDeployCert',
 }

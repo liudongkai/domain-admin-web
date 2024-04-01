@@ -4,7 +4,16 @@
       :data="list"
       stripe
       border
+      @selection-change="$emit('selection-change', $event)"
     >
+      <el-table-column
+        type="selection"
+        header-align="center"
+        align="center"
+        width="40"
+        :selectable="handleSelectable"
+      />
+
       <!-- <el-table-column
         label="ID"
         align="center"
@@ -18,7 +27,7 @@
 
       <!-- 标题 -->
       <el-table-column
-        label="名称"
+        :label="$t('名称')"
         header-align="center"
         align="center"
         prop="title"
@@ -30,7 +39,7 @@
 
       <!-- 监控类型 -->
       <el-table-column
-        label="监控类型"
+        :label="$t('监控类型')"
         header-align="center"
         align="center"
         prop="monitor_type"
@@ -55,11 +64,12 @@
 
       <!-- 检测频率 -->
       <el-table-column
-        label="频率(分钟)"
+        
+        :label="$t('频率(分钟)')"
         header-align="center"
         align="center"
         prop="interval"
-        width="100"
+        width="120"
       >
         <template #default="scope">
           <span>{{ scope.row.interval || '-' }}</span>
@@ -68,7 +78,7 @@
 
       <!-- 状态 -->
       <el-table-column
-        label="状态"
+        :label="$t('状态')"
         header-align="center"
         align="center"
         prop="status"
@@ -83,7 +93,8 @@
       </el-table-column>
 
       <el-table-column
-        label="日志"
+        
+        :label="$t('日志')"
         header-align="center"
         align="center"
         prop="interval"
@@ -101,7 +112,8 @@
 
       <!-- 下次运行时间 -->
       <el-table-column
-        label="下次运行时间"
+        
+        :label="$t('下次运行时间')"
         header-align="center"
         align="center"
         prop="next_run_time"
@@ -114,7 +126,8 @@
 
       <!-- 操作 -->
       <el-table-column
-        label="启用"
+        
+        :label="$t('启用')"
         header-align="center"
         align="center"
         width="80"
@@ -128,8 +141,8 @@
       </el-table-column>
 
       <el-table-column
-        label="编辑"
-        width="60"
+        :label="$t('操作')"
+        width="80"
         header-align="center"
         align="center"
       >
@@ -137,19 +150,11 @@
           <el-link
             :underline="false"
             type="primary"
+            class="mr-sm"
             @click="handleEditRow(scope.row)"
             ><el-icon><Edit /></el-icon
           ></el-link>
-        </template>
-      </el-table-column>
 
-      <el-table-column
-        label="删除"
-        width="60"
-        align="center"
-        prop="tag"
-      >
-        <template #default="scope">
           <el-popconfirm
             :title="`${$t('确定删除')}？`"
             @confirm="handleDeleteClick(scope.row)"
@@ -229,7 +234,7 @@ export default {
     async handleStatusChange(row, value) {
       let params = {
         monitor_id: row.id,
-        is_active: value
+        is_active: value,
       }
 
       const res = await this.$http.updateMonitorActive(params)
@@ -255,6 +260,11 @@ export default {
       })
 
       window.open(route.href, '_blank')
+    },
+
+    handleSelectable(row, index) {
+      return true
+      // return row.has_edit_permission
     },
   },
 
