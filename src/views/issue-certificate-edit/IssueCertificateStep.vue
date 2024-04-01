@@ -34,6 +34,7 @@
       <DownloadStep
         v-else-if="activeStep == 2"
         :form="form"
+        :issueCertificateId="issue_certificate_id"
         @on-close="$emit('on-cancel')"
       ></DownloadStep>
     </div>
@@ -97,7 +98,7 @@ export default {
           title: this.$t('验证域名'),
         },
         {
-          title: this.$t('下载证书'),
+          title: this.$t('部署证书'),
         },
       ],
     }

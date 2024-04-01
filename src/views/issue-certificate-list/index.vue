@@ -147,7 +147,7 @@ export default {
       }
 
       try {
-        const res = await this.$http.getCertificateList(params)
+        const res = await this.$http.getIssueCertificateList(params)
 
         if (res.code == 0) {
           this.list = res.data.list.map((item) => {
@@ -235,6 +235,8 @@ export default {
         name: 'host-list',
       })
     },
+
+    handleEditRow(row){}
   },
 
   created() {
