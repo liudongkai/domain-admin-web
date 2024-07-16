@@ -134,7 +134,7 @@
         <template #header>
           <el-tooltip
             effect="dark"
-            content="自动验证和自动部署成功的证书才会自动续期"
+            content="一键验证和一键部署成功的证书才会自动续期"
             placement="top-start"
             :show-after="800"
           >
@@ -146,7 +146,11 @@
         </template>
 
         <template #default="scope">
-          {{ scope.row.is_auto_renew ? $t('是') : $t('否') }}
+          <el-switch
+            :disabled="!scope.row.can_auto_renew"
+            v-model="scope.row.is_auto_renew"
+            @change="handleAutoRenewChange(scope.row, $event)"
+          />
         </template>
       </el-table-column>
 
@@ -178,6 +182,7 @@
           <el-popconfirm
             title="确定续期？"
             @confirm="handleRenewIssueCertificateById(scope.row)"
+            :disabled="!scope.row.is_auto_renew"
           >
             <template #reference>
               <el-link
@@ -335,6 +340,22 @@ export default {
     handleUpdateSuccess() {
       this.$emit('on-success')
     },
+
+    async handleAutoRenewChange(row, value){
+      let params = {
+        issue_certificate_id: row.id,
+        is_auto_renew: value,
+      }
+
+      const res = await this.$http.updateRowAutoRenew(params)
+
+      if (res.code == 0) {
+        this.$msg.success('操作成功')
+        // this.$emit('on-success')
+      } else {
+        this.$msg.error(res.msg)
+      }
+    }
   },
 
   created() {},

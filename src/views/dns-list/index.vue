@@ -8,7 +8,7 @@
         ><el-icon><Plus /></el-icon>{{ $t('添加') }}</el-button
       >
 
-      <el-input
+      <!-- <el-input
         class="ml-sm"
         style="width: 260px"
         v-model="keyword"
@@ -22,7 +22,7 @@
             <el-icon><Search /></el-icon
           ></el-button>
         </template>
-      </el-input>
+      </el-input> -->
     </div>
 
     <!-- 数据列表 -->
@@ -32,8 +32,6 @@
       :list="list"
       @on-success="resetData"
       @on-edit-row="handleEditRow"
-      @on-row-update="handleRowUpdated"
-      @on-sort-change="handleSortChange"
     />
 
     <!-- 翻页 -->
@@ -57,14 +55,15 @@
 
 <script>
 /**
- * created 2024-02-25
+ * created 2024-06-21
  */
 
-import DataFormDialog from '@/components/certificate-edit/DataFormDialog.vue'
+import DataFormDialog from '../dns-edit/DataFormDialog.vue'
 import DataTable from './DataTable.vue'
+import { DNSTypeOptions } from '@/emuns/dns-type-enums.js'
 
 export default {
-  name: 'certificate-list',
+  name: 'dns-list',
 
   props: {},
 
@@ -80,9 +79,6 @@ export default {
       page: 1,
       size: 20,
       keyword: '',
-
-      order_type: '',
-      order_prop: '',
 
       loading: true,
       dialogVisible: false,
@@ -104,15 +100,18 @@ export default {
         page: this.page,
         size: this.size,
         keyword: this.keyword,
-        order_type: this.order_type,
-        order_prop: this.order_prop,
       }
 
       try {
-        const res = await this.$http.getCertificateList(params)
+        const res = await this.$http.getDnsList(params)
 
         if (res.code == 0) {
-          this.list = res.data.list
+          this.list = res.data.list.map((item) => {
+            item.dns_type_label = DNSTypeOptions.find(
+              (o) => o.value == item.dns_type_id
+            )?.label
+            return item
+          })
           this.total = res.data.total
         }
       } catch (e) {
@@ -135,40 +134,6 @@ export default {
     },
 
     handleEditRow(row) {},
-
-    async handleRowUpdated(row) {
-      let params = {
-        certificate_id: row.certificate_id,
-      }
-
-      const res = await this.$http.getCertificateById(params)
-
-      if (res.ok) {
-        this.list = this.list.map((item) => {
-          if (item.certificate_id == res.data.certificate_id) {
-            return res.data
-          } else {
-            return item
-          }
-        })
-      }
-    },
-
-    handleSortChange({ column, prop, order }) {
-      console.log(column, prop, order)
-
-      // 先清空
-      this.order_prop = ''
-      this.order_type = ''
-
-      // 如果有排序字段，再赋值
-      if (order) {
-        this.order_type = order == 'descending' ? 'desc' : 'asc'
-        this.order_prop = prop
-      }
- 
-      this.resetData()
-    },
   },
 
   created() {

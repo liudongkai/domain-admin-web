@@ -61,6 +61,7 @@ export const routes = [
           icon: 'Tickets',
         },
       },
+
       {
         path: '/cert/issue-certificate-list',
         name: 'issue-certificate-list',
@@ -69,7 +70,18 @@ export const routes = [
           title: '证书申请',
           icon: 'Box',
           // roles: [RoleEnum.Admin],
-          hidden: true,
+          // hidden: true,
+        },
+      },
+      {
+        path: 'certificate-list',
+        name: 'certificate-list',
+        component: () => import('../views/certificate-list/index.vue'),
+        meta: {
+          title: '证书托管',
+          icon: 'Box',
+          // roles: [RoleEnum.Admin],
+          // hidden: true,
         },
       },
 
@@ -79,6 +91,16 @@ export const routes = [
         component: () => import('../views/host-list/index.vue'),
         meta: {
           title: '主机列表',
+          icon: 'User',
+          hidden: true,
+        },
+      },
+      {
+        path: '/cert/dns-list',
+        name: 'dns-list',
+        component: () => import('../views/dns-list/index.vue'),
+        meta: {
+          title: 'DNS列表',
           icon: 'User',
           hidden: true,
         },
@@ -378,18 +400,6 @@ export const routes = [
           hidden: true,
         },
       },
-      {
-        path: 'certificate-list',
-        name: 'certificate-list',
-        component: () => import('../views/certificate-list/index.vue'),
-        meta: {
-          title: '证书托管',
-          icon: 'Box',
-          // roles: [RoleEnum.Admin],
-          hidden: true,
-        },
-      },
-      
     ],
   },
 ]

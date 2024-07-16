@@ -15,7 +15,6 @@
             v-if="hasInit"
             :defaultKeyword="host"
             v-model="deployForm.deploy_host"
-            @on-confirm="handleDeployVerifyFile"
           ></RemoteHost>
 
           <!-- 一键部署 -->
@@ -103,6 +102,7 @@ import JSZip from 'jszip'
 
 import RemoteHost from '@/components/remote-host/index.vue'
 import CodeHighlight from '@/components/code-highlight/index.vue'
+import { formatExportDomain } from '@/utils/domain-util.js'
 
 export default {
   name: 'VerifyStep',
@@ -294,12 +294,12 @@ export default {
         type: 'text/plain;charset=utf-8',
       })
 
-      let name = this.form.domains[0]
+      let name = formatExportDomain(this.form.domains[0])
       FileSaver.saveAs(blob, `${name}.key`)
     },
 
     async downloadSSLFile() {
-      let name = this.form.domains[0]
+      let name = formatExportDomain(this.form.domains[0])
 
       const zip = new JSZip()
 
@@ -316,23 +316,23 @@ export default {
       // })
     },
 
-    async handleDeployVerifyFile(hostRow) {
+    async handleDeployVerifyFile() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.confirmDeployVerifyFile(hostRow)
+          this.confirmDeployVerifyFile()
         } else {
           return false
         }
       })
     },
 
-    async confirmDeployVerifyFile(hostRow) {
+    async confirmDeployVerifyFile() {
       let loading = this.$loading({ fullscreen: true })
 
       let params = {
         // 域名列表
         issue_certificate_id: this.form.id,
-        host_id: hostRow.id,
+        host_id: this.deployForm.deploy_host.id,
         key_deploy_path: this.deployForm.keyDeployPath,
         pem_deploy_path: this.deployForm.pemDeployPath,
         reloadcmd: this.deployForm.reloadcmd,

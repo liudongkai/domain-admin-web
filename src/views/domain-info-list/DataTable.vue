@@ -237,7 +237,7 @@
           header-align="center"
           align="center"
           sortable="custom"
-          prop="domain_expire_monitor"
+          prop="is_auto_update"
         >
           <template #default="scope">
             <el-switch
@@ -269,7 +269,7 @@
 
       <el-table-column
         :label="$t('操作')"
-        width="100"
+        width="110"
         header-align="center"
         align="center"
       >
@@ -290,6 +290,21 @@
             ><el-icon><Files /></el-icon
           ></el-link> -->
 
+          <!-- 导入子域证书 -->
+          <el-popconfirm
+            :title="`${$t('导入子域证书')}？`"
+            @confirm="handleImportSubDomain(scope.row)"
+          >
+            <template #reference>
+              <el-link
+                class="mr-sm"
+                :underline="false"
+                type="primary"
+                ><el-icon><RefreshLeft /></el-icon
+              ></el-link>
+            </template>
+          </el-popconfirm>
+
           <!-- 更新 -->
           <el-link
             :underline="false"
@@ -309,7 +324,7 @@
           ></el-link>
 
           <el-popconfirm
-          :title="`${$t('确定删除')}？`"
+            :title="`${$t('确定删除')}？`"
             @confirm="handleDeleteClick(scope.row)"
             :disabled="!scope.row.has_edit_permission"
           >
@@ -574,6 +589,11 @@ export default {
 
     handleTagClick(tag) {
       this.$emit('on-tag-click', tag)
+    },
+
+    handleImportSubDomain(row) {
+      
+      this.$emit('on-import-sub-domain', [row.id])
     },
   },
 
