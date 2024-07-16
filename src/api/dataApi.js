@@ -110,6 +110,7 @@ export default {
   getSubDomainCert: '/getSubDomainCert',
   updateDomainICPOfUser: '/updateDomainICPOfUser',
   updateDomainRowICP: '/updateDomainRowICP',
+  autoImportSubDomainByIds: '/autoImportSubDomainByIds',
 
   getICP: '/getICP',
 
@@ -138,6 +139,8 @@ export default {
 
   getDomainHost: '/getDomainHost',
   deployVerifyFile: '/deployVerifyFile',
+  addDnsDomainRecord: '/addDnsDomainRecord',
+  updateRowAutoRenew: '/updateRowAutoRenew',
   deployCertificateFile: '/deployCertificateFile',
   getCertificateChallenges: '/getCertificateChallenges',
   deleteIssueCertificateById: '/deleteIssueCertificateById',
@@ -189,4 +192,11 @@ export default {
   deleteByDeployCertIds: '/deleteByDeployCertIds',
   getDeployCertById: '/getDeployCertById',
   handleDeployCert: '/handleDeployCert',
+
+  // DNS账户管理
+  addDns: '/addDns',
+  getDnsById: '/getDnsById',
+  updateDnsById: '/updateDnsById',
+  getDnsList: '/getDnsList',
+  deleteDnsById: '/deleteDnsById',
 }

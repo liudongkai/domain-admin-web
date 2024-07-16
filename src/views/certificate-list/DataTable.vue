@@ -4,6 +4,7 @@
       :data="list"
       stripe
       border
+      @sort-change="$emit('on-sort-change', $event)"
     >
       <!-- 域名 -->
       <el-table-column
@@ -24,7 +25,7 @@
         align="center"
         width="110"
         sortable="custom"
-        prop="expire_days"
+        prop="expire_time"
       >
         <template #default="scope">
           <ExpireProgress
@@ -227,6 +228,7 @@ import JSZip from 'jszip'
 import ConnectStatus from '@/components/ConnectStatus.vue'
 import ExpireProgress from '@/components/ExpireProgress.vue'
 import DeployCertListDialog from '@/components/deploy-cert-list/DataTableDialog.vue'
+import { formatExportDomain } from '@/utils/domain-util.js'
 
 export default {
   name: '',
@@ -295,7 +297,7 @@ export default {
     },
 
     async downloadSSLFile(row) {
-      let name = row.domain
+      let name = formatExportDomain(row.domain)
 
       const zip = new JSZip()
 

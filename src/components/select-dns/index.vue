@@ -1,47 +1,45 @@
 <template>
   <div class="flex flex-1 items-center">
-    <!-- 如果不是默认22端口再显示 -->
-    <template v-if="value && value.id">
-      <el-tag
-        class="cursor-pointer"
-        closable
-        @close="handleClose"
-        @click="handleEditHost"
-        >{{ value.user }}@{{ value.host
-        }}<template v-if="value.port != 22">:{{ value.port }}</template></el-tag
-      >
-    </template>
+    <el-autocomplete
+      v-model="keyword"
+      style="width: 180px"
+      :fetch-suggestions="handleSearch"
+      clearable
+      :placeholder="$t('搜索DNS账号')"
+      @select="handleSelect"
+    />
 
-    <template v-else>
-      <el-autocomplete
-        v-model="keyword"
-        style="width: 180px"
-        :fetch-suggestions="handleSearch"
-        clearable
-        :placeholder="$t('搜索主机')"
-        @select="handleSelect"
-      />
+    <el-link
+      class="ml-sm"
+      :underline="false"
+      type="primary"
+      @click="handleAddClick"
+      ><el-icon><Plus /></el-icon><span>{{ $t('添加') }}</span>
+    </el-link>
 
-      <el-link
-        class="ml-sm"
-        :underline="false"
-        type="primary"
-        @click="handleAddClick"
-        ><el-icon><Plus /></el-icon><span>{{ $t('添加') }}</span>
-      </el-link>
-    </template>
-
-    <DataFormDialog
-      v-model:visible="visible"
-      :row="editValue"
-      @on-success="handleSuccess"
-    ></DataFormDialog>
+    <!-- 编辑框 -->
+    <el-dialog
+      title="DNS账号"
+      v-model="visible"
+      width="400px"
+      center
+      top="20px"
+      append-to-body
+      @close="handleDialogClose"
+    >
+      <DataForm
+        v-if="visible"
+        @on-cancel="handleClose"
+        @on-success="handleSuccess"
+      ></DataForm>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 // created at 2023-07-29
-import DataFormDialog from './DataFormDialog.vue'
+import DataForm from '@/views/dns-edit/DataForm.vue'
+import { DNSTypeOptions } from '@/emuns/dns-type-enums.js'
 
 export default {
   name: 'RemoteHost',
@@ -61,7 +59,7 @@ export default {
   emits: ['update:modelValue'],
 
   components: {
-    DataFormDialog,
+    DataForm,
   },
 
   data() {
@@ -105,12 +103,13 @@ export default {
 
     handleClose() {
       this.value = null
+      this.visible = false
     },
 
     handleAddClick() {
-      this.editValue = {
-        host: this.keyword,
-      }
+      //   this.editValue = {
+      //     host: this.keyword,
+      //   }
       this.visible = true
     },
 
@@ -125,12 +124,16 @@ export default {
         keyword: queryString,
       }
 
-      const res = await this.$http.getHostList(params)
+      const res = await this.$http.getDnsList(params)
 
-      if (res.code == 0) {
+      if (res.ok) {
         cb(
           res.data.list.map((item) => {
-            item.value = item.host
+            let dns_type_label = DNSTypeOptions.find(
+              (o) => o.value == item.dns_type_id
+            )?.label
+
+            item.value = `${item.name}(${dns_type_label})`
             return item
           })
         )
@@ -142,6 +145,7 @@ export default {
     handleSelect(data) {
       console.log(data)
       this.value = data
+      this.$emit('on-change', data)
     },
 
     // handleDeployVerifyFile() {
@@ -149,8 +153,19 @@ export default {
     // },
 
     handleSuccess(data) {
+      let dns_type_label = DNSTypeOptions.find(
+        (o) => o.value == data.dns_type_id
+      )?.label
+
+      data.value = `${data.name}(${dns_type_label})`
+
       this.value = data
-      this.$emit('on-change')
+      this.$emit('on-change', data)
+      this.handleClose()
+    },
+
+    handleDialogClose() {
+      this.visible = false
     },
   },
 
